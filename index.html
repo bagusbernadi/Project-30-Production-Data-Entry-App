@@ -1,0 +1,503 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Project 30: Production Data Entry App</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Rancangan project portofolio Data Analyst: aplikasi input data produksi perakitan smartphone yang tervalidasi, aman, dan teruji, lengkap dengan dashboard yield dan NG.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: tema terang ala Google (single theme, sengaja): latar putih keabuan, kartu putih;
+   biru = struktur, kuning = penanda utama, hijau = info pendukung, merah = aksen.
+   Skala huruf: H1 32 · H2 25 · H3 19 · body 16.5 · keterangan 14 · label 12.5 */
+:root{color-scheme:light;
+--bg:#F8F9FA;--card:#FFFFFF;--sub:#F1F3F4;--line:#DADCE0;
+--ink:#202124;--head:#174EA6;--mut:#5F6368;
+--navy:#1A73E8;--navy-ink:#FFFFFF;--teal:#188038;--amber:#FBBC04;--amber-ink:#3C2A00;--bar:#1A73E8;--soft:#E8F0FE;
+--gb:#4285F4;--gr:#EA4335;--gy:#FBBC04;--gg:#34A853;
+--navyH:#1A73E8;--amberH:#B06000;--tealH:#188038;--plumH:#9334E6;--roseH:#D93025;--skyH:#1967D2;--onph:#fff;
+--f:"Source Sans 3",Calibri,Carlito,"Segoe UI",Arial,sans-serif;
+--h1:clamp(26px,2.6vw,32px);--h2:clamp(21px,2vw,25px);--h3:19px;--body:16.5px;--small:14px;--label:12.5px}
+[hidden]{display:none!important}
+*{box-sizing:border-box}html{scroll-padding-top:64px;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 var(--body)/1.6 var(--f)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+main{max-width:880px;margin:0 auto;padding-block:16px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+b,strong{font-weight:700}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);padding:8px 0;display:flex;gap:6px;overflow-x:auto}
+nav a{flex:none;background:var(--card);border:1px solid var(--line);color:var(--ink);text-decoration:none;border-radius:999px;padding:6px 14px;font-size:var(--small);font-weight:600}
+nav a:hover,nav a:focus-visible{background:var(--amber);border-color:var(--amber);color:var(--amber-ink);outline:none}
+.banner{background:var(--navy);color:var(--navy-ink);border-radius:18px;padding:22px 26px}
+.banner h1{margin:0 0 8px;font-size:var(--h1);font-weight:800;line-height:1.2;text-wrap:balance;letter-spacing:-.01em}.banner p{margin:0;font-size:18px;line-height:1.55;opacity:.97}.banner .goal b{font-weight:800}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.tags{align-items:center}.tlab{font-size:var(--small);font-weight:700;margin-right:4px;opacity:.95}
+.tag{border-radius:999px;padding:3px 12px;font-size:var(--label);font-weight:700;background:rgba(255,255,255,.2);letter-spacing:.02em}.tag.a{background:var(--amber);color:var(--amber-ink)}
+.card{border-radius:16px;padding:16px 20px;background:var(--card);border:1px solid var(--line);margin:12px 0}
+.card p{margin:8px 0}
+h2{font-size:var(--h2);font-weight:800;color:var(--head);margin:48px 0 10px;padding-bottom:8px;border-bottom:2px solid var(--line);line-height:1.25;text-wrap:balance}
+h2 small{display:block;font-size:var(--small);font-weight:400;color:var(--mut);margin-top:4px}
+h3{font-size:var(--h3);font-weight:700;color:var(--head);margin:16px 0 6px;line-height:1.3}
+.card h3:first-child,.card>div>h3:first-child{margin-top:4px}
+.add{display:inline-block;vertical-align:middle;margin-left:8px;border-radius:999px;padding:2px 10px;font-size:var(--label);font-weight:700;background:var(--teal);color:#fff}
+.how{background:var(--soft);border-radius:12px;padding:12px 16px;margin:10px 0;font-size:var(--small);line-height:1.55;color:var(--ink)}.how::before{content:"Cara membaca ";font-weight:700;color:var(--teal)}
+.callout{border-radius:14px;padding:14px 20px;margin:12px 0;font-size:16px}.callout h4{margin:0 0 6px;font-size:var(--h3);font-weight:700}.callout p{margin:6px 0}
+.callout.a{background:var(--amber);color:var(--amber-ink)}.callout.g{background:var(--teal);color:#fff}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}.kpis .card{margin:0}
+.kpi .v{font-size:30px;font-weight:800;display:block;line-height:1.15;color:var(--head);font-variant-numeric:tabular-nums}.kpi .l{display:block;font-weight:700;font-size:16px;margin-top:2px}.kpi .d{display:block;font-size:var(--small);line-height:1.4;margin-top:6px;color:var(--mut)}
+.kpi.t{background:var(--teal);border-color:var(--teal);color:#fff}.kpi.am{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}
+.kpi.t .v,.kpi.t .d,.kpi.am .v,.kpi.am .d{color:inherit}
+table{border-collapse:collapse;width:100%;font-size:15px;background:var(--card);border-radius:12px;overflow:hidden}
+th{background:var(--navy);color:var(--navy-ink);padding:9px 12px;text-align:left;vertical-align:top;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:nth-child(odd) td{background:var(--sub)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:10px 0}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:6px 0;display:grid;grid-template-columns:40px 1fr;gap:4px 8px;font-size:16px;line-height:1.45}
+.q .id{font-weight:800;color:var(--head)}.q .m{grid-column:2;font-size:var(--small);color:var(--mut)}
+.pri{display:inline-block;border-radius:999px;padding:1px 9px;font-size:var(--label);font-weight:700;margin-left:6px;background:var(--sub);border:1px solid var(--line);color:var(--mut)}.pri.M{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}.pri.S{background:var(--navy);border-color:var(--navy);color:#fff}
+.theme{font-size:var(--label);font-weight:700;color:var(--teal);margin:20px 0 4px;text-transform:uppercase;letter-spacing:.08em}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0}
+.flow span{border-radius:999px;padding:5px 12px;font-size:var(--small);font-weight:700;background:var(--sub);border:1px solid var(--line)}
+.flow span.ng{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}.flow span.ok{background:var(--teal);border-color:var(--teal);color:#fff}.flow i{font-style:normal;color:var(--mut);font-size:var(--small)}
+.row{display:flex;align-items:center;gap:8px;margin:6px 0;width:100%;font:inherit;font-size:var(--small);color:var(--ink);background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.row .n{width:96px;flex:none;font-weight:600}.row .tr{flex:1;background:var(--sub);border-radius:8px;height:24px;position:relative;overflow:hidden}
+.row .b{position:absolute;left:0;top:0;bottom:0;border-radius:8px;background:var(--bar);transition:width .25s}
+.row.sel .b{background:var(--amber)}.row.sel .n{color:var(--head);font-weight:800}
+.row .c{width:58px;text-align:right;flex:none;font-variant-numeric:tabular-nums;font-weight:600}
+.row:focus-visible{outline:3px solid var(--amber);outline-offset:2px;border-radius:8px}
+.ctl{display:flex;align-items:center;gap:12px;margin:14px 0 10px;font-weight:700;font-size:15px}.ctl input{flex:1;accent-color:#F2A541}.ctl output{min-width:48px;text-align:right}
+.res{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}.res div{background:var(--sub);border-radius:12px;padding:10px 14px;font-size:var(--small);color:var(--mut)}.res b{display:block;font-size:24px;font-weight:800;color:var(--head);font-variant-numeric:tabular-nums}
+.steps{counter-reset:s;display:grid;gap:8px;margin:10px 0;padding:0;list-style:none}
+.steps li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px 12px 54px;position:relative}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:14px;top:12px;width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;display:grid;place-items:center;font-size:14px}
+.steps li.L::before{background:var(--amber);color:var(--amber-ink)}
+.steps b.t{display:block;font-size:17px;color:var(--head);line-height:1.3}.steps p{margin:6px 0;font-size:15px;line-height:1.5}.steps .meta{font-size:13px;color:var(--mut)}
+.phase{font-size:var(--label);font-weight:700;color:var(--teal);margin:18px 0 0;text-transform:uppercase;letter-spacing:.08em}
+.tools{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:12px 0}.tools .card{margin:0}
+.tools b{display:block;font-size:var(--h3);color:var(--head)}.tools .r{font-size:15px;margin:6px 0 0}.tools .alt{font-size:var(--small);color:var(--mut);margin:8px 0 0;padding-top:8px;border-top:1px dashed var(--line)}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:8px 0}summary{cursor:pointer;font-weight:700;font-size:17px;color:var(--head)}details p{font-size:15.5px}
+.pill{border-radius:999px;padding:1px 9px;font-size:var(--label);font-weight:700;background:var(--teal);color:#fff;margin-left:4px}.pill.d{background:var(--sub);border:1px solid var(--line);color:var(--mut)}
+.chip{display:inline-block;border-radius:999px;padding:3px 11px;margin:3px 4px 3px 0;font-size:var(--small);font-weight:600;background:var(--sub);border:1px solid var(--line)}
+.tm{border-bottom:2px dotted var(--amber);background:rgba(242,165,65,.16);border-radius:4px;padding:0 2px;cursor:help}
+#tip{position:fixed;display:none;max-width:320px;white-space:pre-line;background:#202124;color:#fff;padding:10px 12px;border-radius:12px;font-size:var(--small);line-height:1.4;z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+ul.tight{margin:6px 0;padding-left:20px}ul.tight li{margin:5px 0}
+.intro>.layout{grid-column:1/-1}
+.layout{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}.layout .lead{margin:4px 0 10px;max-width:90ch}
+.figw{overflow-x:auto;margin:8px 0}.figw svg{display:block;width:100%;min-width:860px;height:auto;font-family:var(--f)}
+.figw .lane{fill:var(--sub)}.figw .box{fill:var(--card);stroke:var(--line);stroke-width:1.5}.figw .box.hi{stroke:var(--bar);stroke-width:2.5}
+.figw text{fill:var(--ink)}.figw .ln{font-size:15px;font-weight:700;fill:var(--head)}.figw .gl{font-size:13px;font-weight:700;fill:var(--teal);letter-spacing:.03em}
+.figw .bt{font-size:13px}.figw .b{font-size:15px;font-weight:700}.figw .st{font-size:13px;fill:var(--mut)}
+.figw .grp{stroke:var(--teal);stroke-width:2}.figw .ar{stroke:var(--bar);stroke-width:2}.figw .ah{fill:var(--bar)}
+.figw .ng,.figw .ngs{stroke:var(--amber);stroke-width:2;stroke-dasharray:5 4}.figw .aha{fill:var(--amber)}.figw .nl{font-size:14px;font-weight:700;fill:var(--amberH)}
+.figw .dt{stroke:var(--mut);stroke-width:2;stroke-dasharray:2 4}
+.figw .okb{fill:var(--teal)}.figw .scb{fill:var(--amber)}.figw .wt{fill:#fff;font-size:14px;font-weight:700}.figw .at{fill:var(--amber-ink);font-size:14px;font-weight:700}
+.figw .mk{fill:var(--amber)}.figw .mt{fill:var(--amber-ink);font-size:14px;font-weight:800}
+.legend{counter-reset:l;list-style:none;padding:0;margin:10px 0 0;display:grid;gap:10px}
+.legend li{counter-increment:l;position:relative;padding-left:38px;font-size:15.5px;line-height:1.55}
+.legend li::before{content:counter(l);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--amber);color:var(--amber-ink);font-weight:800;font-size:14px;display:grid;place-items:center}
+@media (min-width:1000px){.legend{grid-template-columns:repeat(4,1fr);gap:16px}}
+.kpi{--h:var(--navyH);background:color-mix(in srgb,var(--h) 11%,var(--card));border-color:color-mix(in srgb,var(--h) 35%,var(--card))}
+.kpi .v{color:var(--h)}.kpi .l{color:var(--ink)}.kpi .d{color:var(--mut)}
+.q[data-p="M"]{background:color-mix(in srgb,var(--amber) 13%,var(--card));border-color:color-mix(in srgb,var(--amber) 60%,var(--card))}
+.q[data-p="S"]{background:color-mix(in srgb,var(--skyH) 9%,var(--card));border-color:color-mix(in srgb,var(--skyH) 35%,var(--card))}
+.q[data-p="N"]{border-style:dashed}
+.q[data-p="M"] .id{color:var(--amberH)}.q[data-p="S"] .id{color:var(--skyH)}.q[data-p="N"] .id{color:var(--mut)}
+.pri.S{background:var(--skyH);border-color:var(--skyH);color:var(--onph)}
+.fbar{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0 4px}.fbar span{font-size:var(--small);font-weight:700;color:var(--mut);margin-right:2px}
+.fb{font:inherit;font-size:var(--small);font-weight:700;cursor:pointer;border-radius:999px;padding:6px 14px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.fb i{font-style:normal;opacity:.7;margin-left:4px}.fb:hover{border-color:var(--bar)}.fb:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.fb.on{background:var(--navy);border-color:var(--navy);color:#fff}.fb.on[data-f="M"]{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}.fb.on[data-f="S"]{background:var(--skyH);border-color:var(--skyH);color:var(--onph)}
+.defs p{margin:0 0 12px}.defs p:last-child{margin:0}
+.fx{display:inline-block;margin:2px 0;padding:1px 9px;border-radius:8px;background:color-mix(in srgb,var(--tealH) 12%,var(--card));border:1px solid color-mix(in srgb,var(--tealH) 40%,var(--card));color:var(--tealH);font-weight:700;font-size:15px;white-space:normal}
+.figw.fl svg{min-width:520px;max-width:1000px;margin:0 auto}.flowfull .card{padding:20px 24px}.flowfull .card>p{text-align:center;margin:12px 0 0}.figw .dia{fill:var(--sub);stroke:var(--bar);stroke-width:2}.figw .b2{font-size:14px;font-weight:700}
+.figw .arT{fill:none;stroke:var(--teal);stroke-width:2}.figw .aht{fill:var(--teal)}.figw .arA{fill:none;stroke:var(--amber);stroke-width:2}.figw .aha2{fill:var(--amber)}
+.figw .lt{font-size:13px;font-weight:700;fill:var(--tealH)}.figw .la{font-size:13px;font-weight:700;fill:var(--amberH)}
+.ph .phase{color:var(--ph);font-size:13.5px}
+.ph .steps li{background:color-mix(in srgb,var(--ph) 8%,var(--card));border-color:color-mix(in srgb,var(--ph) 32%,var(--card))}
+.ph .steps li::before,.ph .steps li.L::before{background:var(--ph);color:var(--onph)}
+.ph .steps b.t{color:var(--ink)}
+.steps li.L::after{content:"beban besar";position:absolute;right:12px;top:12px;font-size:11.5px;font-weight:700;letter-spacing:.03em;padding:1px 8px;border-radius:999px;border:1px solid var(--ph,var(--amber));color:var(--ph,var(--amber))}
+.steps li.L b.t{padding-right:84px}
+.banner{background:linear-gradient(120deg,#1A73E8,#4285F4)}
+h2{border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--gb) 0 60px,var(--line) 60px) 1}
+nav a:nth-child(4n+1):hover{background:var(--gb);border-color:var(--gb);color:#fff}nav a:nth-child(4n+2):hover{background:var(--gr);border-color:var(--gr);color:#fff}nav a:nth-child(4n+4):hover{background:var(--gg);border-color:var(--gg);color:#fff}
+.callout.g{background:#E6F4EA;color:#0D652D;border:1px solid #A8DAB5}.callout.g h4{color:#137333}
+.callout.a{background:#FEF7E0;color:#3C2A00;border:1px solid #FDD663}
+.outs{display:grid;gap:12px;margin:12px 0}.outs .card{margin:0}
+.out{--h:var(--navyH);border-top:4px solid var(--h)}
+.out .oh{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}.out .oh b{font-size:var(--h3);color:var(--h);line-height:1.3}
+.ob{flex:none;border-radius:999px;padding:1px 9px;font-size:var(--label);font-weight:700;background:var(--amber);color:var(--amber-ink)}.ob.opt{background:var(--sub);border:1px solid var(--line);color:var(--mut)}
+.out ul{margin:8px 0 0;padding-left:18px;font-size:15px;line-height:1.5}.out li{margin:4px 0}
+.out li:nth-last-child(-n+2){color:var(--mut);font-size:14px}
+@media (min-width:700px){.outs{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1280px){.outs{grid-template-columns:repeat(4,1fr)}}
+.tag.c1{background:#188038;color:#fff}.tag.c2{background:#9334E6;color:#fff}.tag.c3{background:#D93025;color:#fff}.tag.c4{background:#fff;color:#1A73E8}
+.sample td:first-child{white-space:nowrap}.src{border-top:1px dashed var(--line);padding-top:8px;font-size:15px}.src code{font-size:13.5px;background:var(--soft);padding:1px 6px;border-radius:6px}.note{font-size:13px;color:var(--mut);margin:6px 0 0}
+.wf{display:grid;gap:4px}
+.wl{--c:var(--navyH);position:relative;background:color-mix(in srgb,var(--c) 8%,var(--card));border:1px solid color-mix(in srgb,var(--c) 30%,var(--card));border-radius:14px;padding:10px 12px 12px}
+.wl h4{margin:0 0 10px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--c)}
+.ws{display:grid;gap:22px}
+.wb{position:relative;background:var(--card);border:2px solid var(--c);border-radius:12px;padding:10px 12px 10px 52px;min-height:62px}
+.wb .n{position:absolute;left:12px;top:12px;width:30px;height:30px;border-radius:50%;background:var(--c);color:var(--onph);font-weight:800;font-size:14px;display:grid;place-items:center}
+.wb b{display:block;font-size:15px;line-height:1.3}.wb .s{display:block;font-size:13px;color:var(--mut);margin-top:2px}
+.wb.L::before{content:"beban besar";position:absolute;top:-10px;right:10px;background:var(--amber);color:var(--amber-ink);font-size:11px;font-weight:700;padding:0 8px;border-radius:999px;line-height:18px}
+.wb:not(:last-child)::after{content:"↓";position:absolute;left:50%;bottom:-21px;transform:translateX(-50%);color:var(--c);font-weight:800;font-size:16px;line-height:1}
+.wa{text-align:center;font-weight:800;font-size:20px;color:var(--mut);line-height:1.2}
+.wrow,.wrow1{display:grid;gap:4px}
+.wrow>.wl:first-child{margin-bottom:24px}.wrow>.wl:first-child::after{content:"↓";position:absolute;left:50%;bottom:-24px;transform:translateX(-50%);font-weight:800;font-size:20px;color:var(--mut)}
+@media (min-width:1200px){
+.wrow{grid-template-columns:2fr 3fr;gap:30px}.wrow>.wl:first-child{margin-bottom:0}.wrow>.wl:first-child::after{content:"→";left:auto;right:-24px;bottom:auto;top:50%;transform:translateY(-50%)}
+.wrow1{grid-template-columns:2fr 3fr}
+.ws{grid-template-columns:repeat(var(--k),1fr);gap:26px}
+.wb:not(:last-child)::after{content:"→";left:auto;right:-25px;bottom:auto;top:50%;transform:translateY(-50%)}
+.wl{padding-left:8px;padding-right:8px}.ws{gap:34px}
+.wrow,.wrow1{gap:16px}.wrow>.wl:first-child::after{right:-14px;font-size:16px}
+}
+.docs code{font-size:13.5px;background:var(--soft);padding:1px 6px;border-radius:6px;white-space:nowrap}.docs td:nth-child(3){white-space:nowrap}
+/* layar lebar: nav jadi sidebar, konten dibagi kolom */
+.two{display:grid;gap:0 24px;align-items:start}.two>*{min-width:0}
+.qgrid{display:grid;gap:0 12px}.qgrid>*{min-width:0}
+@media (min-width:1000px){
+main{max-width:1480px}
+.two,.qgrid{grid-template-columns:1fr 1fr}.qgrid .theme{grid-column:1/-1}
+.kpis{grid-template-columns:repeat(6,1fr)}.tools{grid-template-columns:repeat(3,1fr)}
+.intro{display:grid;grid-template-columns:1fr 1fr;column-gap:28px;align-items:start}.intro h3{grid-column:1/-1}.intro>p{grid-column:1}.intro>.scroll{grid-column:2;grid-row:2/span 3;margin-top:8px}
+.phases{display:grid;grid-template-columns:repeat(2,1fr);gap:0 24px}.phases>*{min-width:0}
+}
+@media (min-width:1280px){
+main{display:grid;grid-template-columns:190px minmax(0,1fr);column-gap:32px}
+main>*{grid-column:2}
+main>nav{grid-column:1;grid-row:1/span 60;align-self:start;flex-direction:column;padding-top:16px}
+main>nav a{border-radius:10px;font-size:15px;padding:8px 14px}
+.phases{grid-template-columns:repeat(4,1fr)}
+}
+@media (max-width:620px){.kpis,.res{grid-template-columns:1fr 1fr}.tools{grid-template-columns:1fr}.row .n{width:78px}.banner{padding:18px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.row .b{transition:none}}
+.figw .box.warn{stroke:var(--amber);stroke-width:2.5}.figw .arA.dsh{stroke-dasharray:5 4}.figw .arB{fill:none;stroke:var(--bar);stroke-width:2}
+#bars .row .n{width:190px}#bars .row .g{position:absolute;left:0;top:0;bottom:0;border-radius:8px;background:color-mix(in srgb,var(--amber) 38%,var(--card))}
+#bars .row .b{background:var(--bar)}#bars .row.sel .b{background:var(--bar)}#bars .row.sel .n{color:var(--ink);font-weight:600}
+#bars .row .tg{width:118px;flex:none;font-size:12px;font-weight:700;text-align:center;border-radius:999px;padding:1px 6px;background:var(--sub);border:1px solid var(--line);color:var(--mut)}
+#bars .row.sel .tg{background:#E6F4EA;border-color:#A8DAB5;color:#0D652D}#bars .row.na{cursor:not-allowed}#bars .row.na .tg{background:#FEF7E0;border-color:#FDD663;color:#3C2A00}
+#bars.up .row{cursor:default}#bars.up .row .g{background:var(--bar);z-index:1}#bars.up .row .b{background:var(--teal)}
+.figw .lb{font-size:13px;font-weight:700;fill:var(--head)}
+.src a{color:var(--navy);font-weight:600}
+@media (min-width:1200px){.wa{display:grid;grid-template-columns:repeat(5,1fr);gap:34px;padding:0 9px}.wa.r span{grid-column:5}.wa.l span{grid-column:1}
+.ws.rev{direction:rtl}.ws.rev .wb{direction:ltr}.ws.rev .wb:not(:last-child)::after{content:"←";right:auto;left:-25px}}
+@media (max-width:620px){#bars .row{flex-wrap:wrap;gap:4px 8px}#bars .row .n{width:100%}#bars .row .tg{width:auto}}
+</style>
+</head><body>
+<a href="https://bagusbernadi.github.io/" style="display:inline-block;margin:12px 16px;font:600 14px/1.4 'Source Sans 3',Arial,sans-serif;color:#1A73E8;text-decoration:none">← All projects / Semua project</a>
+<main>
+<nav aria-label="Section navigation"><a href="#s1">Background</a><a href="#s2">Business Questions</a><a href="#s3">Input Validation &amp; Yield</a><a href="#s4">Dataset</a><a href="#s5">Tools</a><a href="#s6">Work Plan</a><a href="#s7">Project Outputs</a><a href="#s8">Success Criteria</a><a href="#s9">Assumptions &amp; Limitations</a></nav>
+
+<header class="banner"><h1>Project 30: Production Data Entry App + Dashboard</h1>
+<p class="goal"><b>Tujuan project:</b> membangun aplikasi input data produksi yang tervalidasi untuk menggantikan pencatatan Excel manual, yang langsung menampilkan yield dan NG rate per stasiun, model, dan supplier, sehingga masalah kualitas terlihat di hari yang sama dan waktu rekap manual bisa dihemat.</p>
+<div class="tags"><span class="tlab">Kategori:</span><span class="tag a">Rancangan project</span><span class="tag c1">Manufaktur smartphone</span><span class="tag c2">Data simulasi</span><span class="tag c3">Aplikasi Streamlit + SQL</span></div></header>
+
+<section class="card intro">
+<h3>Project Introduction</h3>
+<p>Bayangkan warung yang mencatat penjualan di buku tulis. Kasir menulis nama barang dan jumlahnya dengan tangan. Kadang tulisan sulit dibaca, kadang jumlah salah ditulis, kadang ada transaksi yang lupa dicatat. Setiap malam pemilik warung menjumlahkan semuanya dengan kalkulator, dan kesalahan baru ketahuan berhari-hari kemudian.</p>
+<p>Lalu warung beralih ke aplikasi kasir. Kasir tinggal memilih barang dari daftar, total dihitung otomatis, dan aplikasi menolak jumlah yang tidak masuk akal. Laporan penjualan langsung tersedia kapan saja, tanpa perlu menghitung ulang.</p>
+<div class="scroll"><table><tr><th>Di warung</th><th>Di pabrik smartphone</th></tr>
+<tr><td>Buku catatan kasir</td><td>Sheet Excel output harian yang diisi operator di tiap stasiun</td></tr>
+<tr><td>Salah tulis nama barang atau jumlah</td><td>Salah ketik model, kolom kosong, jumlah OK + NG tidak masuk akal</td></tr>
+<tr><td>Menjumlah dengan kalkulator setiap malam</td><td>Engineer merekap banyak file secara manual setiap minggu dan setiap bulan</td></tr>
+<tr><td>Aplikasi kasir dengan daftar barang</td><td>Form input dengan pilihan stasiun, model, dan supplier yang sudah ditentukan</td></tr>
+<tr><td>Laporan penjualan otomatis</td><td>Dashboard yield dan NG rate yang selalu memakai data terbaru</td></tr>
+<tr><td>Kunci laci kas disimpan di tempat aman</td><td>Kata sandi database disimpan terpisah, tidak ikut tersimpan di kode</td></tr>
+</table></div>
+<p>Project ini meng-upgrade aplikasi Streamlit lama menjadi <b>aplikasi input dan dashboard yang aman, tervalidasi, dan teruji</b>. Kode lama dirapikan, kredensial yang sempat tersimpan di repositori dibersihkan, lalu hasilnya dilengkapi analisis dengan temuan berangka. Datanya adalah data simulasi karena data pabrik bersifat rahasia. Kata bergaris bawah putus-putus kuning bisa diklik untuk melihat artinya.</p>
+<div class="layout">
+<h3>Gambaran alur kerja di lini perakitan smartphone</h3>
+<p class="lead">Lini produksi bisa dibayangkan sebagai tiga jalur. Jalur pertama adalah proses produksi. Jalur kedua adalah cara mencatat yang dipakai saat ini. Jalur ketiga adalah yang dibangun di project ini untuk menggantikan jalur kedua.</p>
+<div class="figw"><svg viewBox="0 0 1240 434" role="img" aria-label="Alur kerja lini perakitan smartphone: jalur produksi 10 stasiun, jalur pencatatan Excel manual saat ini, dan jalur data baru berupa form input tervalidasi, database, dan dashboard"><defs><marker id="mN" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker><marker id="mT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="aht" d="M0 0L10 5L0 10z"/></marker></defs><rect class="lane" x="0" y="8" width="1240" height="130" rx="14"/><rect class="lane" x="0" y="150" width="1240" height="140" rx="14"/><rect class="lane" x="0" y="302" width="1240" height="130" rx="14"/>
+<text class="ln" x="16" y="78">Jalur</text><text class="ln" x="16" y="96">produksi</text>
+<text class="ln" x="16" y="218">Pencatatan</text><text class="ln" x="16" y="236">saat ini</text>
+<text class="ln" x="16" y="362">Jalur data</text><text class="ln" x="16" y="380">baru</text>
+<line class="grp" x1="120" x2="1124" y1="40" y2="40"/><text class="gl" x="622" y="32" text-anchor="middle">10 stasiun perakitan smartphone</text><rect class="box" x="120" y="52" width="95" height="60" rx="10"/><text class="bt" x="167.5" y="78" text-anchor="middle">Solder Paste</text><text class="bt" x="167.5" y="95" text-anchor="middle">Printing</text><line class="ar" x1="215" x2="219" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="221" y="52" width="95" height="60" rx="10"/><text class="bt" x="268.5" y="78" text-anchor="middle">Component</text><text class="bt" x="268.5" y="95" text-anchor="middle">Placement</text><line class="ar" x1="316" x2="320" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="322" y="52" width="95" height="60" rx="10"/><text class="bt" x="369.5" y="78" text-anchor="middle">Reflow</text><text class="bt" x="369.5" y="95" text-anchor="middle">Soldering</text><line class="ar" x1="417" x2="421" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="423" y="52" width="95" height="60" rx="10"/><text class="bt" x="470.5" y="78" text-anchor="middle">AOI</text><text class="bt" x="470.5" y="95" text-anchor="middle">Inspection</text><line class="ar" x1="518" x2="522" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="524" y="52" width="95" height="60" rx="10"/><text class="bt" x="571.5" y="78" text-anchor="middle">Board Test</text><text class="bt" x="571.5" y="95" text-anchor="middle">(ICT)</text><line class="ar" x1="619" x2="623" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="625" y="52" width="95" height="60" rx="10"/><text class="bt" x="672.5" y="78" text-anchor="middle">Screen</text><text class="bt" x="672.5" y="95" text-anchor="middle">Assembly</text><line class="ar" x1="720" x2="724" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="726" y="52" width="95" height="60" rx="10"/><text class="bt" x="773.5" y="78" text-anchor="middle">Housing</text><text class="bt" x="773.5" y="95" text-anchor="middle">Assembly</text><line class="ar" x1="821" x2="825" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="827" y="52" width="95" height="60" rx="10"/><text class="bt" x="874.5" y="78" text-anchor="middle">Final</text><text class="bt" x="874.5" y="95" text-anchor="middle">Inspection</text><line class="ar" x1="922" x2="926" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="928" y="52" width="95" height="60" rx="10"/><text class="bt" x="975.5" y="78" text-anchor="middle">Functional</text><text class="bt" x="975.5" y="95" text-anchor="middle">Test</text><line class="ar" x1="1023" x2="1027" y1="82" y2="82" marker-end="url(#mN)"/><rect class="box" x="1029" y="52" width="95" height="60" rx="10"/><text class="bt" x="1076.5" y="87" text-anchor="middle">Packaging</text><line class="ar" x1="1124" x2="1160" y1="82" y2="82" marker-end="url(#mN)"/><text class="bt" x="1166" y="87">Gudang</text>
+<line class="dt" x1="170" x2="170" y1="116" y2="192" marker-end="url(#mN)"/><text class="st" x="182" y="176">operator mencatat hasil setiap tray di setiap stasiun</text>
+<rect class="box" x="120" y="196" width="200" height="62" rx="10"/><text class="bt b" x="220" y="222" text-anchor="middle">Operator isi Excel</text><text class="st" x="220" y="242" text-anchor="middle">ketik bebas, tanpa pengecekan</text><line class="ar" x1="320" x2="366" y1="227" y2="227" marker-end="url(#mN)"/><rect class="box" x="370" y="196" width="200" height="62" rx="10"/><text class="bt b" x="470" y="222" text-anchor="middle">File terpisah</text><text class="st" x="470" y="242" text-anchor="middle">per stasiun dan per bulan</text><line class="ar" x1="570" x2="616" y1="227" y2="227" marker-end="url(#mN)"/><rect class="box" x="620" y="196" width="200" height="62" rx="10"/><text class="bt b" x="720" y="222" text-anchor="middle">Rekap manual</text><text class="st" x="720" y="242" text-anchor="middle">engineer gabung dan hitung</text><line class="ar" x1="820" x2="866" y1="227" y2="227" marker-end="url(#mN)"/><rect class="box warn" x="870" y="196" width="240" height="62" rx="10"/><text class="bt b" x="990" y="222" text-anchor="middle">Laporan terlambat</text><text class="st" x="990" y="242" text-anchor="middle">salah ketik ikut terhitung</text>
+<line class="arT" x1="220" x2="220" y1="262" y2="336" marker-end="url(#mT)"/><text class="lt" x="232" y="322">diganti oleh aplikasi</text>
+<rect class="box hi" x="120" y="340" width="200" height="62" rx="10"/><text class="bt b" x="220" y="366" text-anchor="middle">Form input</text><text class="st" x="220" y="386" text-anchor="middle">pilihan tetap + validasi</text><line class="ar" x1="320" x2="366" y1="371" y2="371" marker-end="url(#mN)"/><rect class="box hi" x="370" y="340" width="200" height="62" rx="10"/><text class="bt b" x="470" y="366" text-anchor="middle">Database</text><text class="st" x="470" y="386" text-anchor="middle">SQLite / PostgreSQL</text><line class="ar" x1="570" x2="616" y1="371" y2="371" marker-end="url(#mN)"/><rect class="box hi" x="620" y="340" width="200" height="62" rx="10"/><text class="bt b" x="720" y="366" text-anchor="middle">Dashboard</text><text class="st" x="720" y="386" text-anchor="middle">Streamlit + Plotly</text><line class="ar" x1="820" x2="866" y1="371" y2="371" marker-end="url(#mN)"/><rect class="box" x="870" y="340" width="240" height="62" rx="10"/><text class="bt b" x="990" y="366" text-anchor="middle">Keputusan harian</text><text class="st" x="990" y="386" text-anchor="middle">stasiun dan supplier prioritas</text>
+<line class="grp" x1="120" x2="820" y1="410" y2="410"/><text class="gl" x="470" y="426" text-anchor="middle">Bagian yang dibangun di project ini</text>
+<circle class="mk" cx="120" cy="52" r="13"/><text class="mt" x="120" y="57" text-anchor="middle">1</text>
+<circle class="mk" cx="120" cy="196" r="13"/><text class="mt" x="120" y="201" text-anchor="middle">2</text>
+<circle class="mk" cx="120" cy="340" r="13"/><text class="mt" x="120" y="345" text-anchor="middle">3</text>
+<circle class="mk" cx="370" cy="340" r="13"/><text class="mt" x="370" y="345" text-anchor="middle">4</text>
+</svg></div>
+<ol class="legend">
+<li><b>Jalur produksi.</b> Komponen melewati 10 stasiun secara berurutan, dari Solder Paste Printing sampai Packaging. Di setiap stasiun, operator menghitung jumlah OK dan NG untuk setiap tray.</li>
+<li><b>Pencatatan saat ini.</b> Operator mengetik hasil di Excel tanpa pengecekan. File tersebar per stasiun dan per bulan, lalu engineer merekap secara manual. Salah ketik baru ketahuan saat laporan disusun.</li>
+<li><b>Form input tervalidasi.</b> Operator memilih stasiun, model, dan supplier dari daftar, lalu mengisi jumlah OK dan NG. Aplikasi menolak isian yang tidak masuk akal dan menjelaskan apa yang harus diperbaiki.</li>
+<li><b>Database dan dashboard.</b> Data yang lolos validasi langsung tersimpan di database. Dashboard membaca data itu dan menampilkan yield, NG rate, dan tren tanpa rekap manual.</li>
+</ol>
+</div>
+</section>
+
+<div class="kpis">
+<div class="card kpi" style="--h:var(--navyH)"><span class="v">15</span><span class="l">pertanyaan analisis</span><span class="d">Hal yang ingin dijawab, 10 di antaranya prioritas utama (bagian 2).</span></div>
+<div class="card kpi" style="--h:var(--amberH)"><span class="v">5</span><span class="l">ukuran kinerja (KPI)</span><span class="d">Yield, NG rate, error input, kelengkapan input, dan jam rekap dihemat (bagian 3).</span></div>
+<div class="card kpi" style="--h:var(--tealH)"><span class="v">12</span><span class="l">langkah pengerjaan</span><span class="d">Dari audit repositori lama sampai aplikasi online dan README selesai (bagian 6).</span></div>
+<div class="card kpi" style="--h:var(--plumH)"><span class="v">10 / 3 / 4</span><span class="l">stasiun / model / supplier</span><span class="d">10 stasiun perakitan, model Basic, Plus, dan Pro, dan 4 supplier anonim.</span></div>
+<div class="card kpi" style="--h:var(--roseH)"><span class="v">±3 bulan</span><span class="l">periode data</span><span class="d">Data Excel lama sebagai pembanding, lalu data dari aplikasi.</span></div>
+<div class="card kpi" style="--h:var(--skyH)"><span class="v">4</span><span class="l">tabel data</span><span class="d">Data produksi, daftar pilihan, riwayat perubahan, dan input yang ditolak (bagian 4).</span></div>
+</div>
+
+<h2 id="s1">1. Background<small>Kenapa tema ini dipilih</small></h2>
+<div class="card two">
+<div><h3>Latar belakang masalah</h3>
+<p>Di lini perakitan smartphone, hasil kerja setiap tray (jumlah OK dan NG, model, batch, supplier, operator) masih dicatat di Excel. Aplikasi Streamlit yang sudah pernah dibuat juga belum siap dipakai karena masalah keamanan dan validasi. Akibatnya:</p>
+<ul class="tight">
+<li>Isian bebas membuat data kotor: nama model ditulis berbeda-beda, kolom kosong, atau jumlah OK dan NG keliru.</li>
+<li>Engineer menghabiskan waktu setiap minggu untuk menggabungkan dan membersihkan file sebelum bisa menghitung yield.</li>
+<li>Masalah di satu stasiun atau supplier baru terlihat saat laporan bulanan, saat kerugiannya sudah terjadi.</li>
+<li>Di repositori aplikasi lama, file berisi kredensial database ikut tersimpan, sehingga siapa pun yang membuka repositori bisa mengakses database.</li>
+</ul></div>
+<div><h3>Alasan memilih tema ini sebagai portofolio</h3>
+<ul class="tight">
+<li><b>Dekat dengan pekerjaan sehari-hari.</b> Pencatatan output dan NG per tray adalah pekerjaan rutin di lini, dan masalah data kotornya dialami langsung.</li>
+<li><b>Menunjukkan skill Data Analyst yang lebih lengkap.</b> Selain analisis dan dashboard, project ini menunjukkan cara mencegah data kotor sejak awal, menulis query yang aman, menguji kode, dan mengamankan kredensial.</li>
+<li><b>Tingkat kesulitan sulit.</b> Analisisnya deskriptif, tetapi bagian aplikasi, keamanan, unit test, dan deploy menambah beban teknis.</li>
+<li><b>Terhubung dengan project lain.</b> Memakai definisi yield dari Project 3, melanjutkan ide anti-bypass dari Project 19 dan ETL dari Project 33, dan datanya bisa dipakai di Project 17 (Supplier Quality Scorecard) dan Project 23 (Telegram Bot KPI Reporting).</li>
+</ul></div>
+</div>
+
+<h2 id="s2">2. Business Questions<small>Satu pertanyaan utama, dipecah menjadi pertanyaan yang lebih kecil</small></h2>
+<div class="callout a"><h4>Pertanyaan utama</h4>Bagaimana mengganti pencatatan Excel manual menjadi aplikasi input yang tervalidasi, yang langsung menghasilkan dashboard yield/NG dan insight per stasiun, model, dan supplier?</div>
+<p class="how">Pertanyaan utama dipecah per tema. Label "Utama" berarti wajib dijawab dan dikerjakan lebih dulu. "Pendukung" memperdalam hasil. "Tambahan" dikerjakan jika waktu tersisa. Teks abu-abu di bawah tiap pertanyaan adalah cara menjawabnya.</p>
+
+<div class="fbar" role="group" aria-label="Filter pertanyaan"><span>Tampilkan:</span><button type="button" class="fb on" data-f="*">Semua <i>15</i></button><button type="button" class="fb" data-f="M">Utama <i>10</i></button><button type="button" class="fb" data-f="S">Pendukung <i>4</i></button><button type="button" class="fb" data-f="N">Tambahan <i>1</i></button></div>
+<div class="qgrid" id="qg">
+<p class="theme">Aplikasi dan validasi input</p>
+<div class="q" data-p="M"><span class="id">Q1</span><span>Aturan validasi apa saja yang dibutuhkan agar isian yang salah tidak bisa tersimpan?<span class="pri M">Utama</span></span><span class="m">Audit jenis error di Excel lama, lalu satu aturan untuk tiap jenis error</span></div>
+<div class="q" data-p="M"><span class="id">Q2</span><span>Berapa error input per 1.000 entri sebelum dan sesudah memakai aplikasi?<span class="pri M">Utama</span></span><span class="m">Error rate Excel lama vs log input yang ditolak aplikasi</span></div>
+<div class="q" data-p="S"><span class="id">Q3</span><span>Apakah semua stasiun mengisi data setiap shift, atau ada yang sering terlewat?<span class="pri S">Pendukung</span></span><span class="m">Kelengkapan input per stasiun per shift</span></div>
+
+<p class="theme">Yield dan NG per stasiun dan model</p>
+<div class="q" data-p="M"><span class="id">Q4</span><span>Stasiun mana yang yield-nya paling rendah dan NG rate-nya paling tinggi?<span class="pri M">Utama</span></span><span class="m">Yield dan NG rate per stasiun, Pareto NG</span></div>
+<div class="q" data-p="M"><span class="id">Q5</span><span>Apakah yield berbeda untuk model Basic, Plus, dan Pro, dan di stasiun mana perbedaannya paling besar?<span class="pri M">Utama</span></span><span class="m">Yield per model per stasiun</span></div>
+
+<p class="theme">Supplier dan batch</p>
+<div class="q" data-p="M"><span class="id">Q6</span><span>Supplier mana yang NG rate-nya paling tinggi, dan apakah perbedaannya konsisten di semua batch?<span class="pri M">Utama</span></span><span class="m">NG rate per supplier dan per batch</span></div>
+<div class="q" data-p="S"><span class="id">Q7</span><span>Adakah batch atau tray tertentu yang NG-nya melonjak jauh di atas rata-rata?<span class="pri S">Pendukung</span></span><span class="m">Daftar batch dengan NG rate tertinggi</span></div>
+
+<p class="theme">Tren dari waktu ke waktu</p>
+<div class="q" data-p="M"><span class="id">Q8</span><span>Bagaimana tren yield dan NG rate per hari, dan adakah hari dengan lonjakan NG?<span class="pri M">Utama</span></span><span class="m">Grafik tren harian, rata-rata bergerak 7 hari</span></div>
+<div class="q" data-p="S"><span class="id">Q9</span><span>Apakah NG rate operator baru berbeda dengan operator lama, setelah memperhitungkan jumlah tray yang dikerjakan?<span class="pri S">Pendukung</span></span><span class="m">NG rate per kelompok operator (anonim)</span></div>
+
+<p class="theme">Dampak: jika diterapkan, hasilnya apa</p>
+<div class="q" data-p="M"><span class="id">Q10</span><span>Berapa jam kerja rekap manual yang bisa dihemat per tahun?<span class="pri M">Utama</span></span><span class="m">Jumlah rekap per tahun × menit per rekap ÷ 60</span></div>
+<div class="q" data-p="S"><span class="id">Q11</span><span>Jika NG di supplier atau stasiun teratas turun sekian persen, berapa unit yang terselamatkan per bulan?<span class="pri S">Pendukung</span></span><span class="m">(NG rate lama − NG rate baru) × volume</span></div>
+
+<p class="theme">Keamanan dan keandalan</p>
+<div class="q" data-p="M"><span class="id">Q12</span><span>Apakah semua kredensial sudah hilang dari repositori, termasuk dari riwayat commit lama?<span class="pri M">Utama</span></span><span class="m">Bersihkan git history, rotate kredensial, scan ulang dengan gitleaks</span></div>
+<div class="q" data-p="M"><span class="id">Q13</span><span>Apakah query aman dari SQL injection, dan apakah fitur edit hanya bisa mengubah kolom yang diizinkan?<span class="pri M">Utama</span></span><span class="m">Parameterized query, whitelist kolom, unit test</span></div>
+<div class="q" data-p="M"><span class="id">Q14</span><span>Apakah angka di dashboard sama dengan hitungan manual?<span class="pri M">Utama</span></span><span class="m">Cek silang SQL vs pandas/Excel</span></div>
+<div class="q" data-p="N"><span class="id">Q15</span><span>Apakah aplikasi tetap berjalan sama persis saat database dipindah dari SQLite ke PostgreSQL?<span class="pri">Tambahan</span></span><span class="m">Test yang sama dijalankan di dua database lewat GitHub Actions</span></div>
+</div>
+
+<h2 id="s3">3. Input Validation &amp; Yield<span class="add">Komponen tambahan</span><small>Bagaimana validasi mencegah data kotor, dan seberapa besar pengaruhnya</small></h2>
+<p class="how">Laporan yield hanya bisa dipercaya jika datanya bersih. Karena itu aturan validasi dan rumus KPI ditetapkan di awal. Arahkan kursor atau klik kata yang diberi garis bawah kuning untuk melihat pengertian dan rumusnya.</p>
+<div class="flowfull"><h3>Alur input data</h3>
+<div class="card"><div class="figw fl"><svg viewBox="0 0 640 262" role="img" aria-label="Diagram percabangan: operator mengisi form, aplikasi memeriksa apakah isian valid; jika ya data disimpan ke database dan dashboard diperbarui, jika tidak muncul pesan error lalu operator memperbaiki dan mengirim ulang"><defs><marker id="fN" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker><marker id="fT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="aht" d="M0 0L10 5L0 10z"/></marker><marker id="fA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="aha2" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="box" x="8" y="93" width="110" height="44" rx="10"/><text class="b2" x="63" y="120" text-anchor="middle">Input Form</text>
+<line class="ar" x1="118" x2="146" y1="115" y2="115" marker-end="url(#fN)"/>
+<polygon class="dia" points="148,115 200,79 252,115 200,151"/><text class="b2" x="200" y="120" text-anchor="middle">Valid?</text>
+<polyline class="arT" points="200,79 200,32 286,32" marker-end="url(#fT)"/><text class="lt" x="208" y="62">Ya</text>
+<rect class="box" x="290" y="10" width="130" height="44" rx="10"/><text class="b2" x="355" y="37" text-anchor="middle">Save to DB</text>
+<line class="arT" x1="420" x2="456" y1="32" y2="32" marker-end="url(#fT)"/>
+<rect class="okb" x="460" y="12" width="170" height="40" rx="20"/><text class="wt" x="545" y="37" text-anchor="middle">Dashboard updated</text>
+<polyline class="arA" points="200,151 200,200 286,200" marker-end="url(#fA)"/><text class="la" x="208" y="180">Tidak</text>
+<rect class="scb" x="290" y="180" width="150" height="40" rx="20"/><text class="at" x="365" y="205" text-anchor="middle">Error message</text>
+<line class="arA" x1="440" x2="466" y1="200" y2="200" marker-end="url(#fA)"/>
+<rect class="box" x="470" y="178" width="160" height="44" rx="10"/><text class="b2" x="550" y="205" text-anchor="middle">Fix &amp; resubmit</text>
+<polyline class="arA dsh" points="550,222 550,248 63,248 63,141" marker-end="url(#fA)"/><text class="la" x="300" y="242" text-anchor="middle">kembali ke form</text>
+</svg></div>
+<p>Isian yang tidak lolos validasi tidak pernah masuk database. Setiap penolakan dicatat beserta alasannya, sehingga error input sebelum dan sesudah aplikasi bisa dibandingkan.</p></div></div>
+
+<h3>Seberapa banyak error yang bisa dicegah aplikasi</h3>
+<p class="how">Setiap batang adalah satu jenis error input di Excel lama, dalam satuan error per 1.000 entri (angka contoh, bukan hasil dari data). Batang muda menunjukkan kondisi sebelum aplikasi, batang biru menunjukkan sisa error. Klik sebuah baris untuk menyalakan atau mematikan aturan validasinya, lalu geser slider untuk mengatur berapa persen input yang sudah lewat aplikasi. Jam rekap dihitung dari contoh rekap mingguan 90 menit.</p>
+<div class="card"><div id="bars"></div>
+<div class="ctl"><label for="sl">Input lewat aplikasi</label><input id="sl" type="range" min="0" max="100" value="80"><output id="slo" for="sl">80%</output></div>
+<div class="res"><div>Error per 1.000 entri (Excel)<b id="r1"></b></div><div>Error per 1.000 entri (aplikasi)<b id="r2"></b></div><div>Jam rekap dihemat/tahun<b id="r3"></b></div></div>
+<p id="ins" style="margin:12px 0 0;font-size:15.5px"></p></div>
+
+<h2 id="s4">4. Dataset<small>Data simulasi yang meniru struktur data produksi perakitan smartphone</small></h2>
+<div class="two"><div class="card">
+<p><b>Kenapa data simulasi?</b> Data pabrik bersifat rahasia. Data dibuat dengan program Python yang mengikuti struktur tabel production_data di aplikasi lama: stasiun, model, batch, tray, supplier, OK/NG, dan operator. Ada dua kelompok data: data "Excel lama" yang sengaja dibuat kotor sebagai pembanding, dan data seed yang dimasukkan lewat aplikasi.</p>
+<p><b>Ukuran:</b> 10 stasiun, 3 model, 4 supplier, 2 shift, sekitar 16 operator, sekitar 75 hari kerja. Perkiraan jumlah baris: ±30.000 baris tray di data Excel lama dan ±30.000 baris di data aplikasi. Jumlah pastinya baru diketahui setelah data dibuat.</p>
+<p class="src"><b>Sumber data:</b> data simulasi buatan sendiri, dibuat oleh skrip <code>scripts/generate_data.py</code> di repositori project (Versi: v1, rancangan; Tanggal dibuat: saat Tahap B dikerjakan). Data seed kecil ikut disertakan di repositori. Tidak memakai data perusahaan.</p>
+</div>
+<div class="callout g"><h4>Fakta yang sengaja ditanam (ground truth)</h4>
+<p>1. Satu supplier modul kamera (usulan: Supplier C) dibuat NG rate-nya sekitar 2 kali lebih tinggi di Functional Test.</p>
+<p>2. Model Pro dibuat yield-nya lebih rendah di Component Placement karena jumlah komponennya lebih banyak.</p>
+<p>3. Satu batch bermasalah selama ±4 hari menaikkan NG di Reflow Soldering dan AOI Inspection.</p>
+<p>4. Operator baru dibuat lebih sering NG di 2 minggu pertama, lalu membaik.</p>
+<p>5. Sekitar 2–3% data Excel lama dibuat kotor: salah ketik model, kolom kosong, OK + NG bernilai 0 atau melebihi kapasitas tray, baris ganda, supplier tidak dikenal.</p></div></div>
+
+<h3>Empat tabel yang akan dibuat</h3>
+<p class="how">Data disimpan dalam beberapa tabel yang saling terhubung, seperti beberapa sheet Excel yang dihubungkan lewat kolom yang sama. Tabel production_data mengikuti aplikasi lama, tiga tabel lainnya baru ditambahkan untuk validasi dan jejak perubahan.</p>
+<div class="scroll"><table>
+<tr><th>Tabel</th><th>Isi (1 baris = …)</th><th>Kolom utama</th></tr>
+<tr><td><b>production_data</b></td><td>Hasil satu tray di satu stasiun</td><td>id, entry_date, shift, station, model, batch_no, tray_no, supplier, operator_id, ok_qty, ng_qty, created_at</td></tr>
+<tr><td><b>ref_master</b></td><td>Satu pilihan yang sah untuk dropdown (tabel referensi)</td><td>list_type (station / model / supplier / operator), value, active, max_tray_qty</td></tr>
+<tr><td><b>edit_log</b></td><td>Satu perubahan pada data yang sudah tersimpan</td><td>log_id, record_id, column_name, old_value, new_value, edited_by, edited_at</td></tr>
+<tr><td><b>rejected_input</b></td><td>Satu isian yang ditolak validasi</td><td>reject_id, submitted_at, station, rule_failed, input_snapshot</td></tr>
+</table></div>
+
+<div class="two"><div><h3>Contoh isi tabel production_data</h3>
+<div class="scroll"><table class="sample"><tr><th>entry_date</th><th>station</th><th>model</th><th>supplier</th><th>ok_qty</th><th>ng_qty</th></tr>
+<tr><td>2026-08-03</td><td>Functional Test</td><td>Pro</td><td>Supplier C</td><td>46</td><td>4</td></tr>
+<tr><td>2026-08-03</td><td>Reflow Soldering</td><td>Plus</td><td>Supplier A</td><td>49</td><td>1</td></tr></table></div>
+<p class="note">Angka karangan, bukan data asli. Kolom shift, batch_no, tray_no, dan operator_id tidak ditampilkan agar tabel ringkas.</p></div>
+
+<div class="card"><p style="margin:0 0 6px"><b>10 stasiun perakitan</b> (berurutan):</p>
+<span class="chip">1. Solder Paste Printing</span><span class="chip">2. Component Placement</span><span class="chip">3. Reflow Soldering</span><span class="chip">4. AOI Inspection</span><span class="chip">5. Board Test (ICT)</span><span class="chip">6. Screen Assembly</span><span class="chip">7. Housing Assembly</span><span class="chip">8. Final Inspection</span><span class="chip">9. Functional Test</span><span class="chip">10. Packaging</span>
+<p style="margin:10px 0 4px"><b>Contoh aturan validasi</b> (usulan awal, bisa disesuaikan): stasiun, model, dan supplier wajib dipilih dari daftar; OK + NG harus lebih dari 0 dan tidak melebihi kapasitas tray; tanggal tidak boleh di masa depan; kombinasi tanggal, stasiun, batch, dan tray tidak boleh dobel; nomor batch harus sesuai format; fitur edit hanya boleh mengubah kolom ok_qty, ng_qty, dan supplier.</p></div></div>
+
+<h2 id="s5">5. Tools<small>Alat yang dipakai dan alasannya</small></h2>
+<div class="tools">
+<div class="card"><b>Python (Streamlit, pandas)</b><p class="r">Streamlit membangun form input dan halaman dashboard dalam satu aplikasi. pandas dipakai untuk membuat data simulasi, membersihkan data Excel lama, dan cek silang.</p><p class="alt">Aplikasi lama sudah memakai Streamlit, jadi upgrade tidak perlu mulai dari nol.</p></div>
+<div class="card"><b>SQLAlchemy + SQL</b><p class="r">Lapisan penghubung ke database. Semua query memakai parameter, dan fitur edit hanya menerima nama kolom dari whitelist. Query KPI disimpan sebagai view.</p><p class="alt">Kode yang sama bisa berjalan di SQLite dan PostgreSQL. psycopg2 dipakai sebagai driver PostgreSQL.</p></div>
+<div class="card"><b>SQLite + PostgreSQL (Neon)</b><p class="r">SQLite untuk pengembangan dan test di komputer sendiri. PostgreSQL di Neon untuk demo online yang bisa diisi beberapa orang sekaligus.</p><p class="alt">Keduanya gratis. DuckDB tidak dipakai di aplikasi karena kurang cocok untuk banyak penulis data sekaligus.</p></div>
+<div class="card"><b>Plotly</b><p class="r">Grafik interaktif di dashboard: yield per stasiun, Pareto NG, NG rate per supplier, dan tren harian.</p><p class="alt">Menyatu dengan Streamlit dan konsisten dengan project lain di portofolio ini.</p></div>
+<div class="card"><b>pytest + GitHub Actions</b><p class="r">Unit test untuk aturan validasi, query, dan perhitungan KPI. GitHub Actions menjalankan test otomatis setiap ada perubahan kode.</p><p class="alt">Bukti bahwa aplikasi diuji, bukan hanya dicoba manual. Badge status test tampil di README.</p></div>
+<div class="card"><b>git filter-repo + gitleaks</b><p class="r">git filter-repo menghapus file .env dan key JSON dari seluruh riwayat commit. gitleaks memindai ulang repositori untuk memastikan tidak ada kredensial tersisa.</p><p class="alt">Menghapus file di commit terbaru saja tidak cukup karena file lama masih bisa dibuka dari riwayat.</p></div>
+<div class="card"><b>Streamlit Community Cloud</b><p class="r">Tempat aplikasi dipublikasikan agar bisa dibuka lewat link. Kredensial database disimpan di st.secrets, bukan di kode.</p><p class="alt">Gratis dan langsung terhubung ke repositori GitHub.</p></div>
+<div class="card"><b>Docker (opsional)</b><p class="r">Membungkus aplikasi beserta semua library-nya agar bisa dijalankan sama persis di komputer mana pun.</p><p class="alt">Berguna untuk menunjukkan kesiapan deploy di server pabrik. Tidak wajib untuk demo online.</p></div>
+<div class="card"><b>GitHub + Markdown</b><p class="r">Menyimpan kode, data seed, dan README berisi screenshot, diagram alur, insight, dan link demo.</p><p class="alt">Recruiter melihat project langsung dari repositori.</p></div>
+</div>
+
+<h2 id="s6">6. Work Plan<small>Setiap tahap punya warna sendiri. Label "beban besar" = langkah yang paling banyak memakan waktu</small></h2>
+<p class="how">Urutannya seperti merenovasi rumah lama: periksa dulu bagian yang rusak dan ganti kunci yang bocor, siapkan bahan, perbaiki strukturnya, lalu rapikan ruangan agar siap ditinggali. Setiap langkah memakai hasil langkah sebelumnya.</p>
+
+<h3>Alur tahapan kerja</h3>
+<div class="card"><div class="wf">
+<div class="wrow"><div class="wl" style="--c:var(--navyH)"><h4>Tahap A · Perencanaan</h4><div class="ws" style="--k:2"><div class="wb"><span class="n">1</span><b>Audit repo dan error Excel</b><span class="s">Q1 · daftar aturan</span></div><div class="wb L"><span class="n">2</span><b>Mengamankan repositori</b><span class="s">Q12 · repo bersih</span></div></div></div><div class="wl" style="--c:var(--tealH)"><h4>Tahap B · Menyiapkan data &amp; aplikasi</h4><div class="ws" style="--k:3"><div class="wb"><span class="n">3</span><b>Skema dan data simulasi</b><span class="s">CSV + ground truth</span></div><div class="wb L"><span class="n">4</span><b>Form input tervalidasi</b><span class="s">Q1–Q3 · form</span></div><div class="wb"><span class="n">5</span><b>Lapisan database aman</b><span class="s">Q13 · db.py</span></div></div></div></div>
+<div class="wa r"><span>↓</span></div>
+<div class="wl" style="--c:var(--plumH)"><h4>Tahap C · Menghitung dan menganalisis</h4><div class="ws rev" style="--k:5"><div class="wb"><span class="n">6</span><b>Unit test dan CI</b><span class="s">Q13, Q15</span></div><div class="wb"><span class="n">7</span><b>Query KPI dan cek silang</b><span class="s">Q14 · view KPI</span></div><div class="wb L"><span class="n">8</span><b>Analisis yield, NG, supplier</b><span class="s">Q4–Q9</span></div><div class="wb"><span class="n">9</span><b>Hitung dampak</b><span class="s">Q2, Q10, Q11</span></div><div class="wb"><span class="n">10</span><b>Cocokkan ground truth</b><span class="s">validasi</span></div></div></div>
+<div class="wa l"><span>↓</span></div>
+<div class="wrow1"><div class="wl" style="--c:var(--roseH)"><h4>Tahap D · Menyajikan</h4><div class="ws" style="--k:2"><div class="wb L"><span class="n">11</span><b>Dashboard dan deploy</b><span class="s">link demo</span></div><div class="wb"><span class="n">12</span><b>README dan finalisasi</b><span class="s">repositori siap</span></div></div></div></div>
+</div>
+<p class="note" style="text-align:center;margin-top:12px">Panah menunjukkan urutan pengerjaan. Angka di kotak sama dengan nomor langkah di bawah.</p></div>
+
+<div class="phases"><div class="ph" style="--ph:var(--navyH)"><p class="phase">Tahap A · Perencanaan</p>
+<ol class="steps">
+<li><b class="t">Mengaudit repositori lama dan error di Excel</b><p>Mendata struktur kode, tabel, dan masalah di aplikasi lama. Mengelompokkan jenis error di data Excel, lalu menurunkan satu aturan validasi untuk tiap jenis error (Q1).</p><p class="meta">Hasil: laporan audit dan daftar aturan validasi · Alat: Markdown</p></li>
+<li class="L"><b class="t">Mengamankan repositori</b><p>Menghapus file .env dan key JSON dari repositori dan seluruh riwayat commit, mengganti kredensial lama, menambah .gitignore, dan memindahkan kredensial ke st.secrets. Hasilnya dipindai ulang dengan gitleaks (Q12).</p><p class="meta">Hasil: repositori bersih dan catatan keamanan · Alat: git filter-repo, gitleaks</p></li>
+</ol></div>
+
+<div class="ph" style="--ph:var(--tealH)"><p class="phase">Tahap B · Menyiapkan data &amp; aplikasi</p>
+<ol class="steps" start="3" style="counter-reset:s 2">
+<li><b class="t">Merancang skema dan membuat data simulasi</b><p>Menetapkan 4 tabel dan kamus data. Program Python membuat data Excel lama yang kotor dan data seed yang bersih, termasuk fakta yang ditanam.</p><p class="meta">Hasil: skema SQL, CSV, catatan ground truth · Alat: Python, SQL</p></li>
+<li class="L"><b class="t">Membangun form input tervalidasi</b><p>Form dengan dropdown dari tabel ref_master, pengecekan jumlah dan format, serta pesan error yang jelas. Isian yang ditolak dicatat di rejected_input (Q1–Q3).</p><p class="meta">Hasil: halaman input aplikasi · Alat: Streamlit</p></li>
+<li><b class="t">Membangun lapisan database yang aman</b><p>Semua akses database lewat satu modul dengan parameterized query. Fitur edit hanya menerima kolom dari whitelist dan mencatat perubahan di edit_log (Q13).</p><p class="meta">Hasil: modul database · Alat: SQLAlchemy, SQLite, PostgreSQL</p></li>
+</ol></div>
+
+<div class="ph" style="--ph:var(--plumH)"><p class="phase">Tahap C · Menghitung dan menganalisis</p>
+<ol class="steps" style="counter-reset:s 5">
+<li><b class="t">Menulis unit test dan CI</b><p>Test untuk setiap aturan validasi, percobaan SQL injection, whitelist kolom, dan rumus KPI. GitHub Actions menjalankan test di SQLite dan PostgreSQL (Q13, Q15).</p><p class="meta">Hasil: folder tests dan workflow CI · Alat: pytest, GitHub Actions</p></li>
+<li><b class="t">Menulis query KPI dan cek silang</b><p>Membuat view SQL untuk yield, NG rate, kelengkapan input, dan error rate. Beberapa sampel dihitung ulang dengan pandas dan Excel untuk memastikan hasilnya sama (Q14).</p><p class="meta">Hasil: view KPI dan lembar cek silang · Alat: SQL, pandas, Excel</p></li>
+<li class="L"><b class="t">Menganalisis yield, NG, dan supplier</b><p>Menjawab Q4–Q9: peringkat stasiun, perbedaan model, NG rate per supplier dan batch, tren harian, dan kelompok operator. Hasilnya dirangkum menjadi minimal 3 insight berangka.</p><p class="meta">Hasil: grafik dan daftar insight · Alat: SQL, Plotly</p></li>
+<li><b class="t">Menghitung dampak</b><p>Menghitung error per 1.000 entri sebelum dan sesudah aplikasi, jam rekap dihemat per tahun, dan unit terselamatkan jika NG teratas turun 10%, 20%, dan 30% (Q2, Q10, Q11). Semua angka diberi label estimasi.</p><p class="meta">Hasil: tabel skenario dampak · Alat: pandas</p></li>
+<li><b class="t">Mencocokkan dengan fakta yang ditanam</b><p>Memeriksa apakah dashboard dan analisis menemukan semua kejadian yang ditanam di langkah 3. Jika ya, metode terbukti bekerja.</p><p class="meta">Hasil: bagian validasi di README · Alat: Python</p></li>
+</ol></div>
+
+<div class="ph" style="--ph:var(--roseH)"><p class="phase">Tahap D · Menyajikan</p>
+<ol class="steps" style="counter-reset:s 10">
+<li class="L"><b class="t">Membuat dashboard dan deploy</b><p>Dashboard 4 halaman: Ringkasan, Stasiun &amp; Model, Supplier &amp; Batch, dan Kualitas Input. Aplikasi dipublikasikan di Streamlit Community Cloud dengan database Neon.</p><p class="meta">Hasil: link demo aplikasi · Alat: Streamlit, Plotly, Neon</p></li>
+<li><b class="t">Menulis README dan finalisasi</b><p>README berisi masalah, insight utama, rekomendasi, dampak, batasan, screenshot, diagram alur, dan link demo. Insight ditaruh di atas, sebelum daftar fitur aplikasi.</p><p class="meta">Hasil: repositori GitHub siap ditinjau · Alat: Markdown, GitHub</p></li>
+</ol></div></div>
+
+<h2 id="s7">7. Project Outputs<span class="add">Komponen tambahan</span><small>Hasil nyata yang bisa dibuka, dipakai, atau dipakai ulang setelah project selesai</small></h2>
+<p class="how">Setiap kartu adalah satu output. Label "Utama" berarti wajib dibuat, "Opsional" dibuat jika waktu tersisa. Setiap output ditujukan untuk pembaca yang berbeda, mulai dari operator sampai recruiter.</p>
+<div class="outs"><div class="card out" style="--h:var(--navyH)"><div class="oh"><b>Aplikasi input data</b><span class="ob">Utama</span></div><ul><li>Form input per tray dengan dropdown, validasi, dan pesan error yang jelas.</li><li>Fitur edit terbatas dengan riwayat perubahan.</li><li>Bentuk: link aplikasi web (Streamlit Community Cloud).</li><li>Untuk: operator yang mencatat hasil kerja setiap shift.</li></ul></div><div class="card out" style="--h:var(--roseH)"><div class="oh"><b>Dashboard yield &amp; NG</b><span class="ob">Utama</span></div><ul><li>4 halaman: Ringkasan, Stasiun &amp; Model, Supplier &amp; Batch, Kualitas Input.</li><li>Dilengkapi filter tanggal, stasiun, model, supplier, dan shift.</li><li>Bentuk: halaman di aplikasi yang sama.</li><li>Untuk: supervisor dan engineer yang memantau lini setiap hari.</li></ul></div><div class="card out" style="--h:var(--tealH)"><div class="oh"><b>Database &amp; query SQL</b><span class="ob">Utama</span></div><ul><li>Skema 4 tabel yang berjalan di SQLite dan PostgreSQL.</li><li>View KPI dengan rumus yang sama untuk semua halaman.</li><li>Bentuk: folder sql/ dan modul database Python.</li><li>Untuk: analis lain yang ingin memakai ulang data.</li></ul></div><div class="card out" style="--h:var(--plumH)"><div class="oh"><b>Generator data simulasi</b><span class="ob">Utama</span></div><ul><li>Membuat data Excel lama yang kotor dan data seed yang bersih, termasuk fakta yang ditanam.</li><li>Hasilnya selalu sama setiap dijalankan karena memakai seed.</li><li>Bentuk: skrip .py dan data seed CSV.</li><li>Untuk: menguji ulang aplikasi dengan skenario berbeda.</li></ul></div><div class="card out" style="--h:var(--skyH)"><div class="oh"><b>Unit test &amp; CI</b><span class="ob">Utama</span></div><ul><li>Test validasi, keamanan query, dan rumus KPI.</li><li>Berjalan otomatis di GitHub Actions dengan badge status di README.</li><li>Bentuk: folder tests/ dan workflow .yml.</li><li>Untuk: reviewer teknis yang menilai kualitas kode.</li></ul></div><div class="card out" style="--h:var(--amberH)"><div class="oh"><b>Notebook analisis</b><span class="ob">Utama</span></div><ul><li>Analisis Q2–Q11 lengkap dengan grafik dan minimal 3 insight berangka.</li><li>Mencatat cek silang dan pencocokan ground truth.</li><li>Bentuk: Jupyter Notebook (.ipynb).</li><li>Untuk: pembaca teknis yang ingin melihat cara angka dihitung.</li></ul></div><div class="card out" style="--h:var(--navyH)"><div class="oh"><b>README temuan &amp; rekomendasi</b><span class="ob">Utama</span></div><ul><li>Insight utama di bagian atas, lalu rekomendasi, dampak, batasan, screenshot, diagram alur, dan link demo.</li><li>Angka dampak diberi label simulated atau estimated.</li><li>Bentuk: README di GitHub.</li><li>Untuk: semua pembaca, sebagai pintu masuk project.</li></ul></div><div class="card out" style="--h:var(--tealH)"><div class="oh"><b>Docker image</b><span class="ob opt">Opsional</span></div><ul><li>Aplikasi dan semua library dalam satu paket yang siap dijalankan.</li><li>Bentuk: Dockerfile dan petunjuk menjalankan.</li><li>Untuk: tim IT yang ingin memasang aplikasi di server sendiri.</li></ul></div></div>
+
+<h3>Daftar dokumen yang akan dihasilkan</h3>
+<p class="how">Nama file adalah usulan awal dan bisa disesuaikan. Tabel diurutkan menurut tahap pengerjaan (A sampai D). File berisi kredensial dan file database lokal tidak di-commit ke GitHub.</p>
+<div class="scroll"><table class="docs"><tr><th>Nama dokumen</th><th>Isi</th><th>Tahap</th><th>Label</th></tr>
+<tr><td><code>docs/audit_repo_lama.md</code></td><td>Temuan audit aplikasi lama dan jenis error di Excel</td><td>Tahap A</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>docs/validation_rules.md</code></td><td>Daftar aturan validasi dan jenis error yang dicegah</td><td>Tahap A</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>docs/security_cleanup.md</code></td><td>Langkah pembersihan kredensial, rotate, dan hasil scan gitleaks</td><td>Tahap A</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>.gitignore</code></td><td>Mencegah .env, secrets.toml, dan file database ikut ter-commit</td><td>Tahap A</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>.streamlit/secrets.toml.example</code></td><td>Contoh format kredensial tanpa isi asli. File secrets.toml asli tidak di-commit</td><td>Tahap A</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>docs/data_dictionary.md</code></td><td>Kamus data dan diagram hubungan 4 tabel</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>sql/schema.sql</code></td><td>Pembuatan tabel dan aturan pengecekan di database</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>scripts/generate_data.py</code></td><td>Skrip pembuat data simulasi (seed tetap)</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>data/seed/*.csv</code></td><td>Data seed kecil untuk demo dan test</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>data/legacy_excel/*.xlsx</code></td><td>Simulasi file Excel lama yang kotor. Tidak di-commit, dibuat ulang dari skrip</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>data/ground_truth.json</code></td><td>Catatan fakta yang sengaja ditanam</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>app/pages/input.py</code></td><td>Halaman form input</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>app/validation.py</code></td><td>Fungsi aturan validasi</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>app/db.py</code></td><td>Modul akses database (parameterized query, whitelist kolom)</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>local.db</code></td><td>Database SQLite lokal. Tidak di-commit, dibuat ulang dari skrip</td><td>Tahap B</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>tests/</code></td><td>Unit test validasi, keamanan query, dan KPI</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>.github/workflows/ci.yml</code></td><td>Menjalankan test otomatis di SQLite dan PostgreSQL</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>sql/kpi_views.sql</code></td><td>View KPI yield, NG rate, kelengkapan, dan error rate</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>outputs/crosscheck.xlsx</code></td><td>Cek silang KPI SQL vs pandas dan Excel</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>notebooks/analysis.ipynb</code></td><td>Analisis Q2–Q11 dan pencocokan ground truth</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>outputs/*.csv</code></td><td>Tabel insight dan skenario dampak</td><td>Tahap C</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>app/pages/dashboard.py</code></td><td>Halaman dashboard (4 bagian)</td><td>Tahap D</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>requirements.txt</code></td><td>Daftar library Python yang dibutuhkan</td><td>Tahap D</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>docs/img/</code></td><td>Screenshot aplikasi dan diagram alur untuk README</td><td>Tahap D</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>README.md</code></td><td>Insight, rekomendasi, dampak, batasan, dan link demo</td><td>Tahap D</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>index.html</code></td><td>Halaman rancangan project ini (GitHub Pages)</td><td>Tahap D</td><td><span class="ob">Utama</span></td></tr>
+<tr><td><code>Dockerfile</code></td><td>Paket aplikasi untuk dijalankan di server sendiri</td><td>Tahap D</td><td><span class="ob opt">Opsional</span></td></tr>
+</table></div>
+
+<h2 id="s8">8. Success Criteria<span class="add">Komponen tambahan</span><small>Kapan project dianggap selesai dan berhasil</small></h2>
+<div class="card">
+<h3>Project dianggap berhasil jika</h3>
+<ul class="tight">
+<li>Kesepuluh pertanyaan berlabel "Utama" terjawab, dan README memuat minimal 3 insight berangka di bagian atas.</li>
+<li>Scan gitleaks pada repositori dan seluruh riwayat commit tidak menemukan kredensial, dan kredensial lama sudah diganti.</li>
+<li>Semua unit test lulus di GitHub Actions, termasuk percobaan SQL injection dan edit kolom di luar whitelist yang harus ditolak.</li>
+<li>Angka KPI di dashboard sama dengan hitungan manual pandas dan Excel pada sampel yang dicek, dan kelima fakta yang ditanam ditemukan.</li>
+<li>Orang awam bisa membuka link demo dan menyebutkan stasiun serta supplier dengan NG rate tertinggi dalam waktu kurang dari 1 menit.</li>
+<li>Checklist standar terpenuhi: pertanyaan bisnis, data cleaning, analisis SQL, dashboard ter-deploy, README berisi insight dan rekomendasi.</li>
+</ul></div>
+
+<h2 id="s9">9. Assumptions &amp; Limitations<span class="add">Komponen tambahan</span><small>Keputusan yang sudah diambil dan hal yang perlu diwaspadai</small></h2>
+<div class="two"><div><details open><summary>Jenis data: simulasi meniru data kerja <span class="pill">Sudah Anda setujui</span></summary><p>Data dibuat dengan program dan mengikuti struktur production_data dari aplikasi lama. Angka hasil akhir membuktikan bahwa aplikasi dan metodenya bekerja, bukan menggambarkan kondisi pabrik sebenarnya.</p></details>
+<details><summary>Database: SQLite lokal + PostgreSQL untuk deploy <span class="pill">Sudah Anda setujui</span></summary><p>SQLite untuk pengembangan dan test, PostgreSQL di Neon (free tier) untuk demo online. Kolom Tools di daftar portofolio menyebut "PostgreSQL (Neon/Supabase) atau SQLite/DuckDB"; Supabase dan DuckDB tidak dipakai, sehingga kolom itu sebaiknya diperbarui.</p></details>
+<details><summary>Kondisi repositori lama <span class="pill d">Usulan awal</span></summary><p>Repositori Streamlit_project_dashboard belum bisa dibaca dari sesi ini. Rancangan ini mengikuti deskripsi di daftar portofolio: ada file .env dan key JSON di repositori, dan tabel production_data berisi station, model, batch, tray, supplier, OK/NG, dan operator. Jika kondisi aslinya berbeda, langkah 1 dan 2 disesuaikan.</p></details></div>
+<div>
+<details><summary>Ruang lingkup <span class="pill d">Usulan awal</span></summary><p>10 stasiun perakitan smartphone, model Basic, Plus, dan Pro, 4 supplier anonim, 2 shift, ±3 bulan. Satu baris berarti satu tray di satu stasiun. Login cukup satu kata sandi lewat st.secrets, tanpa pembagian hak akses per peran. Dashboard memakai Streamlit + Plotly. Dampak dihitung dalam jam kerja dan unit, belum dalam rupiah.</p></details>
+<details><summary>Hal yang perlu diwaspadai <span class="pill d">Usulan awal</span></summary>
+<p><b>Kredensial yang pernah ter-push dianggap bocor.</b> Menghapus file dari riwayat tidak cukup karena salinannya mungkin sudah tersebar. Kredensial lama wajib diganti.</p>
+<p><b>Validasi tidak menangkap semua error.</b> Angka yang keliru tetapi masih masuk akal (misalnya NG 3 tertulis 2) tetap lolos. Bagian ini dijelaskan apa adanya di README.</p>
+<p><b>Data operator.</b> Operator memakai kode anonim. Analisis per kelompok operator dipakai untuk menentukan kebutuhan pelatihan, bukan untuk menilai individu.</p>
+<p><b>Pola belum tentu penyebab.</b> Jika Supplier C lebih banyak NG, itu baru pola. Penyebabnya perlu dicek di lapangan. Pengujian statistik dikerjakan di Project 29 (Root Cause Analysis).</p>
+<p><b>Batas free tier.</b> Database Neon gratis bisa "tidur" saat tidak dipakai dan punya batas kapasitas, sehingga demo pertama bisa terasa lambat.</p></details></div></div>
+</main>
+
+
+<script>
+const $=id=>document.getElementById(id),f1=v=>v.toFixed(1).replace('.',','),MAXE=15,REKAP=52,MENIT=90;
+const E=[["OK + NG di luar batas",14,1],["Salah ketik model",9,1],["Kolom wajib kosong",7,1],["Supplier tidak dikenal",5,.9],["Nilai tidak wajar",4,.8],["Entri ganda",3,.9],["Angka keliru tapi wajar",6,0]];
+const on=E.map(e=>e[2]>0);
+function draw(){const a=$('sl').value/100,af=E.map((e,i)=>e[1]*(1-(on[i]?e[2]*a:0))),b0=E.reduce((s,e)=>s+e[1],0),b1=af.reduce((s,x)=>s+x,0),jam=Math.round(a*REKAP*MENIT/60),k=on.filter(Boolean).length;
+$('slo').textContent=Math.round(a*100)+'%';
+$('bars').innerHTML=E.map((e,i)=>{const na=e[2]==0,st=na?'tidak tertangkap':on[i]?'aturan aktif':'aturan mati';return `<button type="button" class="row${on[i]?' sel':''}${na?' na':''}" data-i="${i}" aria-pressed="${on[i]}"${na?' aria-disabled="true"':''}><span class="n">${e[0]}</span><span class="tr"><span class="g" style="width:${e[1]/MAXE*100}%"></span><span class="b" style="width:${af[i]/MAXE*100}%"></span></span><span class="c">${f1(af[i])}</span><span class="tg">${st}</span></button>`}).join('');
+$('r1').textContent=f1(b0);$('r2').textContent=f1(b1);$('r3').textContent=jam.toLocaleString('id-ID')+' jam';
+const red=b0?Math.round((b0-b1)/b0*100):0,rest=E.map((e,i)=>[e[0],af[i]]).sort((x,y)=>y[1]-x[1])[0];
+$('ins').innerHTML=a==0?`Jika belum ada input yang lewat aplikasi, error tetap <b>${f1(b0)} per 1.000 entri</b> dan tidak ada jam rekap yang dihemat.`:`Dengan ${k} aturan aktif dan ${Math.round(a*100)}% input lewat aplikasi, error turun dari <b>${f1(b0)}</b> menjadi <b>${f1(b1)} per 1.000 entri</b> (turun ${red}%), dan sekitar <b>${jam.toLocaleString('id-ID')} jam rekap per tahun</b> bisa dihemat. Sisa error terbesar: "${rest[0]}".${rest[0]==E[6][0]?' Error jenis ini tidak bisa dicegah validasi dan perlu cek silang di lapangan.':''}`}
+$('bars').onclick=e=>{const r=e.target.closest('.row');if(r&&!r.classList.contains('na')){const i=+r.dataset.i;on[i]=!on[i];draw()}};$('sl').oninput=draw;draw();
+
+const G=[["yield","i","Persentase produk yang lolos dibanding semua produk yang diproses.\nRumus: yield = OK ÷ (OK + NG).\nContoh: satu tray 50 pcs, 47 OK dan 3 NG, yield = 94%."],["NG rate","i","Persentase produk yang gagal.\nRumus: NG rate = NG ÷ (OK + NG).\nContoh: 3 NG dari 50 pcs, NG rate = 6%."],["error input per 1.000 entri","i","Jumlah isian yang salah untuk setiap 1.000 isian.\nRumus: error per 1.000 entri = entri salah ÷ total entri × 1.000.\nContoh: 24 entri salah dari 2.000 entri = 12 per 1.000 entri."],["error input","i","Isian data yang salah, kosong, atau tidak masuk akal.\nRumus: error per 1.000 entri = entri salah ÷ total entri × 1.000."],["kelengkapan input","i","Persentase isian yang benar-benar masuk dibanding yang seharusnya ada.\nRumus: kelengkapan = entri masuk ÷ entri yang seharusnya × 100%.\nContoh: 10 stasiun × 2 shift = 20 entri seharusnya, 18 masuk, kelengkapan = 90%."],["jam rekap dihemat","i","Waktu kerja yang tidak lagi dipakai untuk merekap data secara manual.\nRumus: jam dihemat = jumlah rekap per tahun × menit per rekap ÷ 60.\nContoh: 52 rekap × 90 menit ÷ 60 = 78 jam per tahun."],["NG","","Not Good: produk yang gagal pemeriksaan."],["OK","","Produk yang lolos pemeriksaan."],["KPI","","Key Performance Indicator: angka kunci untuk menilai kinerja, misalnya yield."],["validasi","i","Pengecekan otomatis sebelum data disimpan. Isian yang tidak memenuhi aturan ditolak dan operator diminta memperbaiki."],["dropdown","i","Daftar pilihan yang sudah ditentukan, sehingga operator memilih, bukan mengetik bebas."],["Streamlit","","Alat untuk membuat aplikasi web dan dashboard memakai Python."],["SQLAlchemy","","Library Python untuk mengakses database. Kode yang sama bisa dipakai untuk SQLite dan PostgreSQL."],["SQLite","","Database ringan dalam satu file, cocok untuk pengembangan dan test di komputer sendiri."],["PostgreSQL","","Database server yang bisa diakses banyak pengguna sekaligus secara online."],["Neon","","Layanan PostgreSQL online dengan paket gratis."],["st.secrets","","Tempat menyimpan kata sandi dan kunci di Streamlit secara terpisah dari kode, sehingga tidak ikut terlihat di GitHub."],["kredensial","i","Data untuk masuk ke sistem, misalnya nama pengguna, kata sandi, atau key database."],[".env","","File berisi kredensial untuk dibaca program. Seharusnya tidak pernah ikut disimpan di repositori."],["git history","i","Riwayat semua perubahan di repositori. File yang pernah di-commit tetap bisa dibuka dari riwayat walaupun sudah dihapus."],["riwayat commit","i","Riwayat semua perubahan di repositori. File yang pernah di-commit tetap bisa dibuka dari riwayat walaupun sudah dihapus."],["git filter-repo","i","Alat untuk menghapus file tertentu dari seluruh riwayat commit."],["gitleaks","i","Alat pemindai yang mencari kata sandi atau key yang tidak sengaja tersimpan di repositori."],["rotate","i","Mengganti kredensial lama dengan yang baru, sehingga kredensial yang bocor tidak bisa dipakai lagi."],["parameterized query","i","Query SQL yang nilai isiannya dikirim terpisah dari perintahnya, sehingga isian tidak bisa disisipi perintah berbahaya."],["SQL injection","i","Serangan dengan menyisipkan perintah SQL lewat kolom isian untuk membaca atau merusak data."],["whitelist","i","Daftar hal yang diizinkan. Di sini, daftar kolom yang boleh diubah lewat fitur edit."],["unit test","i","Kode kecil yang menguji satu fungsi secara otomatis, misalnya memastikan isian OK + NG = 0 ditolak."],["pytest","","Alat untuk menjalankan unit test di Python."],["GitHub Actions","i","Fitur GitHub yang menjalankan test otomatis setiap ada perubahan kode."],["CI","","Continuous Integration: test dijalankan otomatis setiap kali kode berubah."],["Docker","","Alat untuk membungkus aplikasi beserta semua library-nya agar berjalan sama di komputer mana pun."],["dashboard","i","Halaman ringkasan interaktif berisi grafik dan angka kunci."],["Plotly","","Library Python untuk grafik interaktif."],["Pareto","i","Cara mengurutkan masalah dari yang paling sering. Biasanya sedikit jenis masalah menyumbang sebagian besar kejadian (aturan 80/20)."],["supplier","i","Pemasok material, misalnya modul kamera, baterai, atau layar."],["batch","i","Satu kelompok produksi atau material dengan nomor yang sama."],["tray","i","Wadah berisi sejumlah komponen yang dikerjakan bersama di satu stasiun."],["shift","i","Pembagian jam kerja, misalnya shift pagi dan shift malam."],["SQL","","Bahasa untuk meminta dan mengolah data dari tabel database."],["view","i","Query SQL yang disimpan dengan nama, sehingga bisa dipanggil seperti tabel."],["ground truth","i","Fakta yang sengaja ditanam di data simulasi untuk memeriksa apakah analisis berhasil menemukannya."],["data simulasi","i","Data buatan komputer yang meniru kondisi nyata, bukan hasil pencatatan di pabrik."],["data seed","i","Data awal yang dimasukkan ke aplikasi agar dashboard langsung bisa dicoba."],["seed","i","Angka kunci pengacak. Dengan seed yang sama, data acak yang sama bisa dibuat ulang."],["kamus data","i","Dokumen yang menjelaskan arti, satuan, dan contoh isi setiap kolom."],["README","","Dokumen penjelasan project yang dibaca pertama kali di repositori GitHub."],["deploy","i","Memasang aplikasi di server agar bisa dibuka orang lain lewat link."],["rata-rata bergerak 7 hari","i","Rata-rata 7 hari terakhir yang dihitung ulang setiap hari, agar tren tidak terlalu naik-turun."],["free tier","i","Paket gratis dari layanan online, biasanya dengan batas kapasitas dan kecepatan."]];
+
+const TERMS=G.map(([t,f,d])=>({t,d,re:new RegExp('(?<![\\w.-])'+t.replace(/[.*+?^${}()|[\]\\-]/g,'\\$&')+'(?![\\w-])',f)}));
+const SK='svg,.row,.fx,.fbar,.oh,.wb,table td:first-child,h1,h2,h3,nav,button,script,style,summary,.tm,.tag,.pri,.pill,.v,.l,.chip,.flow,th,#tip,.banner,.theme,.phase,.add,.tools b,b.t,code';
+function wrapT(n,seen){let b=null;for(const x of TERMS){if(seen.has(x.t))continue;const m=x.re.exec(n.data);if(m&&(!b||m.index<b.i||(m.index==b.i&&m[0].length>b.l)))b={x,i:m.index,l:m[0].length}}
+if(!b)return;seen.add(b.x.t);const r=n.splitText(b.i),a=r.splitText(b.l),s=document.createElement('span');s.className='tm';s.tabIndex=0;s.dataset.d=b.x.d;s.textContent=r.data;r.replaceWith(s);wrapT(a,seen)}
+function hl(root,seen){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement.closest(SK)?3:1}),ns=[];while(w.nextNode())ns.push(w.currentNode);ns.forEach(n=>wrapT(n,seen))}
+const tip=document.createElement('div');tip.id='tip';tip.setAttribute('role','tooltip');document.body.appendChild(tip);
+function showT(e){tip.textContent=e.dataset.d;tip.style.display='block';const r=e.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;tip.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+'px';tip.style.top=(r.bottom+h+12>innerHeight?r.top-h-6:r.bottom+6)+'px'}
+document.addEventListener('click',ev=>{const t=ev.target.closest('.tm');t?showT(t):tip.style.display='none'});
+document.addEventListener('mouseover',ev=>{const t=ev.target.closest('.tm');if(t)showT(t)});
+document.addEventListener('mouseout',ev=>{if(ev.target.closest&&ev.target.closest('.tm'))tip.style.display='none'});
+document.addEventListener('focusin',ev=>{const t=ev.target.closest&&ev.target.closest('.tm');if(t)showT(t)});
+addEventListener('scroll',()=>tip.style.display='none',{passive:true});
+const qg=$('qg');document.querySelector('.fbar').onclick=e=>{const b=e.target.closest('.fb');if(!b)return;const f=b.dataset.f;
+document.querySelectorAll('.fb').forEach(x=>x.classList.toggle('on',x==b));let th=null,vis=0;
+[...qg.children].forEach(el=>{if(el.classList.contains('theme')){if(th)th.hidden=!vis;th=el;vis=0}else{const show=f=='*'||el.dataset.p==f;el.hidden=!show;if(show)vis++}});if(th)th.hidden=!vis};
+let seen=new Set();[...document.querySelector('main').children].forEach(el=>{if(el.tagName=='H2')seen=new Set();hl(el,seen)});
+</script>
+</body></html>
