@@ -19,8 +19,8 @@ Halaman rancangan: https://bagusbernadi.github.io/Project-30-Production-Data-Ent
 Bagaimana mengganti pencatatan Excel manual menjadi aplikasi input yang tervalidasi, yang langsung menghasilkan dashboard yield/NG dan insight per stasiun, model, dan supplier?
 
 ## 2. Data
-- Data simulasi buatan sendiri, dibuat oleh `scripts/generate_data.py` (Versi: v1, rancangan; Tanggal dibuat: saat Tahap B dikerjakan).
-- 10 stasiun perakitan smartphone, 3 model (Basic, Plus, Pro), 4 supplier anonim, 2 shift, ±3 bulan. Perkiraan ±30.000 baris data Excel lama (sengaja kotor 2–3%) dan ±30.000 baris data aplikasi.
+- Data simulasi buatan sendiri, dibuat oleh `scripts/generate_data.py` (Versi: v1; Tanggal dibuat: 28 Okt 2026; Seed: 30260302).
+- 10 stasiun perakitan smartphone, 3 model (Basic, Plus, Pro), 4 supplier anonim, 2 shift, ±3 bulan. Hasil v1: 30.125 baris data Excel lama (750 baris kotor, 2,5%) dan 30.000 baris data aplikasi, dengan tabel `ref_master`, `edit_log` (90 koreksi), dan `rejected_input` (450 isian ditolak). Data seed kecil (1.200 baris, 3 hari pertama aplikasi) ada di `data/seed/` dan di-commit; data lengkap dibuat ulang oleh generator (`data/sim/`, tidak di-commit).
 - Tidak memakai data perusahaan.
 
 ## 3. Analysis

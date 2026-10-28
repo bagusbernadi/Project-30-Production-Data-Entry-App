@@ -340,7 +340,7 @@ main>nav .links a:hover,main>nav .links a:focus-visible{background:var(--soft);c
 <div class="two"><div class="card">
 <p><b>Kenapa data simulasi?</b> Data pabrik bersifat rahasia. Data dibuat dengan program Python yang mengikuti struktur tabel production_data di aplikasi lama: stasiun, model, batch, tray, supplier, OK/NG, dan operator. Ada dua kelompok data: data "Excel lama" yang sengaja dibuat kotor sebagai pembanding, dan data seed yang dimasukkan lewat aplikasi.</p>
 <p><b>Ukuran:</b> 10 stasiun, 3 model, 4 supplier, 2 shift, sekitar 16 operator, sekitar 75 hari kerja. Perkiraan jumlah baris: ±30.000 baris tray di data Excel lama dan ±30.000 baris di data aplikasi. Jumlah pastinya baru diketahui setelah data dibuat.</p>
-<p class="src"><b>Sumber data:</b> data simulasi buatan sendiri, dibuat oleh skrip <code>scripts/generate_data.py</code> di repositori project (Versi: v1, rancangan; Tanggal dibuat: saat Tahap B dikerjakan). Data seed kecil ikut disertakan di repositori. Tidak memakai data perusahaan.</p>
+<p class="src"><b>Sumber data:</b> data simulasi buatan sendiri, dibuat oleh skrip <code>scripts/generate_data.py</code> di repositori project (Versi: v1; Tanggal dibuat: 28 Okt 2026; Seed: 30260302). Data seed kecil ikut disertakan di repositori. Tidak memakai data perusahaan.</p>
 </div>
 <div class="callout g"><h4>Fakta yang sengaja ditanam (ground truth)</h4>
 <p>1. Satu supplier modul kamera (usulan: Supplier C) dibuat NG rate-nya sekitar 2 kali lebih tinggi di Functional Test.</p>
@@ -500,7 +500,7 @@ main>nav .links a:hover,main>nav .links a:focus-visible{background:var(--soft);c
 <div class="card"><p>Bagaimana mengganti pencatatan Excel manual menjadi aplikasi input yang tervalidasi, yang langsung menghasilkan dashboard yield/NG dan insight per stasiun, model, dan supplier?</p></div>
 
 <h2 id="rp2">2. Data<small>Sumber, ukuran, dan perlakuan awal</small></h2>
-<div class="card"><ul class="tight"><li>Data simulasi buatan sendiri, dibuat oleh <code>scripts/generate_data.py</code> (Versi: v1, rancangan; Tanggal dibuat: saat Tahap B dikerjakan).</li><li>10 stasiun perakitan smartphone, 3 model (Basic, Plus, Pro), 4 supplier anonim, 2 shift, ±3 bulan. Perkiraan ±30.000 baris data Excel lama (sengaja kotor 2–3%) dan ±30.000 baris data aplikasi.</li><li>Tidak memakai data perusahaan.</li></ul></div>
+<div class="card"><ul class="tight"><li>Data simulasi buatan sendiri, dibuat oleh <code>scripts/generate_data.py</code> (Versi: v1; Tanggal dibuat: 28 Okt 2026; Seed: 30260302).</li><li>10 stasiun perakitan smartphone, 3 model (Basic, Plus, Pro), 4 supplier anonim, 2 shift, ±3 bulan. Perkiraan ±30.000 baris data Excel lama (sengaja kotor 2–3%) dan ±30.000 baris data aplikasi.</li><li>Tidak memakai data perusahaan.</li></ul></div>
 
 <h2 id="rp3">3. Analysis<small>Hasil perhitungan dari data</small></h2>
 <div class="card"><p>Belum dikerjakan. Rencana langkah ada di bagian Work Plan pada halaman rancangan.</p></div>
